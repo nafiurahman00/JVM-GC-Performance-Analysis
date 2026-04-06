@@ -1,0 +1,61 @@
+gc_a,gc_b,metric,metric_display,unit,higher_is_better,n_pairs,mean_a,mean_b,pct_change,wilcoxon_stat,p_value,effect_r,significance
+zgc_gen,zgc_nogen,throughput,Throughput,%,True,8,100.0125,99.9975,-0.01,19.0,0.6456,-0.043,ns
+zgc_gen,zgc_nogen,avgPause,Avg Pause Time,s,False,8,0.0001,0.0001,4.26,15.0,0.0778,0.293,ns
+zgc_gen,zgc_nogen,maxPause,Max Pause Time,s,False,8,0.0001,0.0001,-5.08,13.0,0.1038,-0.305,ns
+zgc_gen,zgc_nogen,pauseCount,GC Pause Count,,False,8,20.625,17.0,-17.58,9.0,0.0159,-0.576,*
+zgc_gen,zgc_nogen,gcPerformance,GC Throughput,MB/s,True,8,14674008.0381,14128442.4818,-3.72,13.0,0.0838,-0.304,ns
+zgc_gen,zgc_nogen,totalHeapUsedMax,Peak Heap Used,MB,False,8,2149.0392,2160.25,0.52,17.0,0.3671,0.053,ns
+zgc_gen,zgc_nogen,totalHeapAllocMax,Heap Allocated,MB,False,8,2298.5415,2287.25,-0.49,20.0,0.6058,-0.04,ns
+zgc_gen,zgc_nogen,wallTimeSec,Wall-Clock Time,s,False,10,21.3153,21.3905,0.35,27.0,1.0,0.0,ns
+zgc_gen,zgc_nogen,freedMemoryByGC,Memory Freed by GC,MB,True,8,20581.96,20044.75,-2.61,13.0,0.0598,-0.272,ns
+zgc_gen,zgc_nogen,footprint,Memory Footprint,MB,False,8,2298.5415,2287.25,-0.49,14.0,0.5526,-0.042,ns
+zgc_gen,g1gc,throughput,Throughput,%,True,8,100.0125,95.7188,-4.29,13.0,0.0987,-0.277,ns
+zgc_gen,g1gc,avgPause,Avg Pause Time,s,False,8,0.0001,0.0156,26423.4,1.0,0.0021,0.893,**
+zgc_gen,g1gc,maxPause,Max Pause Time,s,False,8,0.0001,0.1656,112151.69,0.0,0.002,0.939,**
+zgc_gen,g1gc,pauseCount,GC Pause Count,,False,8,20.625,130.25,531.52,2.0,0.0023,0.876,**
+zgc_gen,g1gc,gcPerformance,GC Throughput,MB/s,True,8,14674008.0381,21676.0385,-99.85,1.0,0.0022,-0.882,**
+zgc_gen,g1gc,totalHeapUsedMax,Peak Heap Used,MB,False,8,2149.0392,588.75,-72.6,2.0,0.0023,-0.862,**
+zgc_gen,g1gc,totalHeapAllocMax,Heap Allocated,MB,False,8,2298.5415,965.5,-58.0,0.0,0.0026,-0.945,**
+zgc_gen,g1gc,wallTimeSec,Wall-Clock Time,s,False,10,21.3153,18.4724,-13.34,13.0,0.1602,-0.04,ns
+zgc_gen,g1gc,freedMemoryByGC,Memory Freed by GC,MB,True,8,20581.96,18778.0,-8.76,15.0,0.0662,-0.279,ns
+zgc_gen,g1gc,footprint,Memory Footprint,MB,False,8,2298.5415,965.5,-58.0,1.0,0.0025,-0.934,**
+zgc_gen,shenandoah,throughput,Throughput,%,True,8,100.0125,99.9163,-0.1,18.0,0.3973,-0.06,ns
+zgc_gen,shenandoah,avgPause,Avg Pause Time,s,False,8,0.0001,0.0003,448.94,1.0,0.0021,0.944,**
+zgc_gen,shenandoah,maxPause,Max Pause Time,s,False,8,0.0001,0.0029,1858.47,1.0,0.0014,0.929,**
+zgc_gen,shenandoah,pauseCount,GC Pause Count,,False,8,20.625,57.75,180.0,0.0,0.0022,0.94,**
+zgc_gen,shenandoah,gcPerformance,GC Throughput,MB/s,True,8,14674008.0381,574378.6376,-96.09,2.0,0.0015,-0.865,**
+zgc_gen,shenandoah,totalHeapUsedMax,Peak Heap Used,MB,False,8,2149.0392,1560.6068,-27.38,7.0,0.0173,-0.613,*
+zgc_gen,shenandoah,totalHeapAllocMax,Heap Allocated,MB,False,8,2298.5415,2248.3889,-2.18,11.0,0.0658,-0.312,ns
+zgc_gen,shenandoah,wallTimeSec,Wall-Clock Time,s,False,10,21.3153,23.2876,9.25,0.0,0.002,0.14,**
+zgc_gen,shenandoah,freedMemoryByGC,Memory Freed by GC,MB,True,8,20581.96,16654.8641,-19.08,7.0,0.0199,-0.649,*
+zgc_gen,shenandoah,footprint,Memory Footprint,MB,False,8,2298.5415,2248.3889,-2.18,11.0,0.0604,-0.293,ns
+zgc_nogen,g1gc,throughput,Throughput,%,True,10,99.964,97.436,-2.53,0.0,0.0039,-0.99,**
+zgc_nogen,g1gc,avgPause,Avg Pause Time,s,False,10,0.0001,0.0091,15668.97,0.0,0.002,1.0,**
+zgc_nogen,g1gc,maxPause,Max Pause Time,s,False,10,0.0001,0.0531,58902.22,0.0,0.002,1.0,**
+zgc_nogen,g1gc,pauseCount,GC Pause Count,,False,10,7.9,47.3,498.73,0.0,0.002,0.89,**
+zgc_nogen,g1gc,gcPerformance,GC Throughput,MB/s,True,10,12715834.8274,26828.5833,-99.79,0.0,0.002,-1.0,**
+zgc_nogen,g1gc,totalHeapUsedMax,Peak Heap Used,MB,False,10,2009.0,362.2,-81.97,0.0,0.002,-0.72,**
+zgc_nogen,g1gc,totalHeapAllocMax,Heap Allocated,MB,False,10,2176.0,523.2,-75.96,3.0,0.0098,-0.6,**
+zgc_nogen,g1gc,wallTimeSec,Wall-Clock Time,s,False,10,21.3905,18.4724,-13.64,8.0,0.0488,-0.06,*
+zgc_nogen,g1gc,freedMemoryByGC,Memory Freed by GC,MB,True,10,7286.2,9243.7,26.87,15.0,0.2324,0.12,ns
+zgc_nogen,g1gc,footprint,Memory Footprint,MB,False,10,2176.0,523.2,-75.96,3.0,0.0098,-0.6,**
+zgc_nogen,shenandoah,throughput,Throughput,%,True,10,99.964,98.516,-1.45,0.0,0.002,-0.84,**
+zgc_nogen,shenandoah,avgPause,Avg Pause Time,s,False,10,0.0001,0.0004,582.76,0.0,0.002,1.0,**
+zgc_nogen,shenandoah,maxPause,Max Pause Time,s,False,10,0.0001,0.0032,3447.78,0.0,0.002,1.0,**
+zgc_nogen,shenandoah,pauseCount,GC Pause Count,,False,10,7.9,26.4,234.18,0.0,0.002,0.59,**
+zgc_nogen,shenandoah,gcPerformance,GC Throughput,MB/s,True,10,12715834.8274,0.0,-100.0,0.0,0.002,-1.0,**
+zgc_nogen,shenandoah,totalHeapUsedMax,Peak Heap Used,MB,False,9,1926.6667,1408.0894,-26.92,8.0,0.014,-0.633,*
+zgc_nogen,shenandoah,totalHeapAllocMax,Heap Allocated,MB,False,9,2060.4444,2026.7751,-1.63,21.0,0.4286,-0.057,ns
+zgc_nogen,shenandoah,wallTimeSec,Wall-Clock Time,s,False,10,21.3905,23.2876,8.87,7.0,0.0371,0.06,*
+zgc_nogen,shenandoah,freedMemoryByGC,Memory Freed by GC,MB,True,10,7286.2,0.0,-100.0,0.0,0.002,-1.0,**
+zgc_nogen,shenandoah,footprint,Memory Footprint,MB,False,9,2060.4444,2026.7751,-1.63,18.0,0.4783,-0.035,ns
+g1gc,shenandoah,throughput,Throughput,%,True,10,97.436,98.516,1.11,13.0,0.1602,0.6,ns
+g1gc,shenandoah,avgPause,Avg Pause Time,s,False,10,0.0091,0.0004,-95.67,0.0,0.002,-1.0,**
+g1gc,shenandoah,maxPause,Max Pause Time,s,False,10,0.0531,0.0032,-93.99,0.0,0.002,-0.88,**
+g1gc,shenandoah,pauseCount,GC Pause Count,,False,10,47.3,26.4,-44.19,7.0,0.0352,-0.43,*
+g1gc,shenandoah,gcPerformance,GC Throughput,MB/s,True,10,26828.5833,0.0,-100.0,0.0,0.002,-1.0,**
+g1gc,shenandoah,totalHeapUsedMax,Peak Heap Used,MB,False,9,526.4444,1408.0894,167.47,1.0,0.0025,0.936,**
+g1gc,shenandoah,totalHeapAllocMax,Heap Allocated,MB,False,9,885.7778,2026.7751,128.81,1.0,0.0024,0.907,**
+g1gc,shenandoah,wallTimeSec,Wall-Clock Time,s,False,10,18.4724,23.2876,26.07,3.0,0.0098,0.14,**
+g1gc,shenandoah,freedMemoryByGC,Memory Freed by GC,MB,True,10,9243.7,0.0,-100.0,0.0,0.002,-1.0,**
+g1gc,shenandoah,footprint,Memory Footprint,MB,False,9,885.7778,2026.7751,128.81,3.0,0.0016,0.883,**

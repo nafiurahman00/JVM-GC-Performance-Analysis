@@ -1,0 +1,16 @@
+Using scaled threading model. 12 processors detected, 12 threads used to drive the workload, in a possible range of [1,512]
+Tomcat is using port 8080. Configure with -Ddacapo.tomcat.port.
+Version: tomcat 10.1.11 (use -p to print nominal benchmark stats)
+Server created with thread pool size 12
+===== DaCapo 23.11-MR2-chopin tomcat starting =====
+Loading web application
+Starting 80000 requests...
+Completing requests: 5%Completing requests: 10%Completing requests: 15%Completing requests: 20%Completing requests: 25%Completing requests: 30%Completing requests: 35%Completing requests: 40%Completing requests: 45%Completing requests: 50%Completing requests: 55%Completing requests: 60%Completing requests: 65%Completing requests: 70%Completing requests: 75%Completing requests: 80%Completing requests: 85%Completing requests: 90%Completing requests: 95%
+Completed requests
+Client threads complete ... unloading web application
+===== DaCapo 23.11-MR2-chopin tomcat PASSED in 22231 msec =====
+===== DaCapo processed 80000 requests in 21898 msec, 3653 requests per second =====
+===== DaCapo tail latency, simple: 50% 1811 usec, 90% 4161 usec, 99% 17172 usec, 99.9% 164717 usec, 99.99% 1234155 usec, max 1238207 usec, measured over 80000 events =====
+===== DaCapo tail latency, metered 100ms smoothing: 50% 2639 usec, 90% 7306 usec, 99% 20962 usec, 99.9% 164717 usec, 99.99% 1234155 usec, max 1238207 usec, measured over 80000 events =====
+===== DaCapo tail latency, metered full smoothing: 50% 4643446 usec, 90% 6439560 usec, 99% 6467797 usec, 99.9% 6472776 usec, 99.99% 6486299 usec, max 6493571 usec, measured over 80000 events =====
+Server stopped ... iteration complete

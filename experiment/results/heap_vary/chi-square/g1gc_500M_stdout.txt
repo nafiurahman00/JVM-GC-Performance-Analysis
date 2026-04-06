@@ -1,0 +1,19 @@
+NOTE: 'chi-square' benchmark uses Spark local executor with 4 (out of 12) threads.
+====== chi-square (apache-spark) [default], iteration 0 started ======
+GC before operation: completed in 24.704 ms, heap usage 81.000 MB -> 29.890 MB.
+01:55:27.348 WARN  [Executor task launch worker for task 1.0 in stage 1.0 (TID 2)] org.apache.spark.storage.memory.MemoryStore - Not enough space to cache rdd_2_1 in memory! (computed 42.8 MiB so far)
+01:55:27.356 WARN  [Executor task launch worker for task 1.0 in stage 1.0 (TID 2)] org.apache.spark.storage.BlockManager - Block rdd_2_1 could not be removed as it was not found on disk or in memory
+01:55:27.357 WARN  [Executor task launch worker for task 1.0 in stage 1.0 (TID 2)] org.apache.spark.storage.BlockManager - Putting block rdd_2_1 failed
+====== chi-square (apache-spark) [default], iteration 0 completed (5241.287 ms) ======
+====== chi-square (apache-spark) [default], iteration 1 started ======
+GC before operation: completed in 66.438 ms, heap usage 212.836 MB -> 105.327 MB.
+01:55:29.201 WARN  [Executor task launch worker for task 1.0 in stage 4.0 (TID 7)] org.apache.spark.storage.memory.MemoryStore - Not enough space to cache rdd_2_1 in memory! (computed 42.8 MiB so far)
+01:55:29.201 WARN  [Executor task launch worker for task 1.0 in stage 4.0 (TID 7)] org.apache.spark.storage.BlockManager - Block rdd_2_1 could not be removed as it was not found on disk or in memory
+01:55:29.201 WARN  [Executor task launch worker for task 1.0 in stage 4.0 (TID 7)] org.apache.spark.storage.BlockManager - Putting block rdd_2_1 failed
+====== chi-square (apache-spark) [default], iteration 1 completed (1522.904 ms) ======
+====== chi-square (apache-spark) [default], iteration 2 started ======
+GC before operation: completed in 58.143 ms, heap usage 294.090 MB -> 105.405 MB.
+01:55:30.767 WARN  [Executor task launch worker for task 1.0 in stage 7.0 (TID 12)] org.apache.spark.storage.memory.MemoryStore - Not enough space to cache rdd_2_1 in memory! (computed 42.8 MiB so far)
+01:55:30.767 WARN  [Executor task launch worker for task 1.0 in stage 7.0 (TID 12)] org.apache.spark.storage.BlockManager - Block rdd_2_1 could not be removed as it was not found on disk or in memory
+01:55:30.767 WARN  [Executor task launch worker for task 1.0 in stage 7.0 (TID 12)] org.apache.spark.storage.BlockManager - Putting block rdd_2_1 failed
+====== chi-square (apache-spark) [default], iteration 2 completed (1571.217 ms) ======

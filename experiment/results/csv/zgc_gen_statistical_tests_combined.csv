@@ -1,0 +1,61 @@
+gc_a,gc_b,metric,metric_display,unit,higher_is_better,n_pairs,mean_a,mean_b,pct_change,wilcoxon_stat,p_value,effect_r,significance
+zgc_gen,zgc_nogen,throughput,Throughput,%,True,8,100.0125,99.9975,-0.01,15.0,0.5046,-0.054,ns
+zgc_gen,zgc_nogen,avgPause,Avg Pause Time,s,False,8,0.0001,0.0001,4.26,13.0,0.0953,0.323,ns
+zgc_gen,zgc_nogen,maxPause,Max Pause Time,s,False,8,0.0001,0.0001,-5.08,10.0,0.0668,-0.273,ns
+zgc_gen,zgc_nogen,pauseCount,GC Pause Count,,False,8,20.625,17.0,-17.58,8.0,0.0169,-0.597,*
+zgc_gen,zgc_nogen,gcPerformance,GC Throughput,MB/s,True,8,14674008.0381,14128442.4818,-3.72,13.0,0.0595,-0.292,ns
+zgc_gen,zgc_nogen,totalHeapUsedMax,Peak Heap Used,MB,False,8,2149.0392,2160.25,0.52,16.0,0.4083,0.056,ns
+zgc_gen,zgc_nogen,totalHeapAllocMax,Heap Allocated,MB,False,8,2298.5415,2287.25,-0.49,13.0,0.4232,-0.055,ns
+zgc_gen,zgc_nogen,wallTimeSec,Wall-Clock Time,s,False,18,30.0149,29.6927,-1.07,84.0,0.9661,-0.012,ns
+zgc_gen,zgc_nogen,freedMemoryByGC,Memory Freed by GC,MB,True,8,20581.96,20044.75,-2.61,10.0,0.092,-0.324,ns
+zgc_gen,zgc_nogen,footprint,Memory Footprint,MB,False,8,2298.5415,2287.25,-0.49,20.0,0.4775,-0.04,ns
+zgc_gen,g1gc,throughput,Throughput,%,True,8,100.0125,95.7188,-4.29,11.0,0.0809,-0.26,ns
+zgc_gen,g1gc,avgPause,Avg Pause Time,s,False,8,0.0001,0.0156,26423.4,2.0,0.0024,0.896,**
+zgc_gen,g1gc,maxPause,Max Pause Time,s,False,8,0.0001,0.1656,112151.69,1.0,0.0022,0.944,**
+zgc_gen,g1gc,pauseCount,GC Pause Count,,False,8,20.625,130.25,531.52,1.0,0.0025,0.935,**
+zgc_gen,g1gc,gcPerformance,GC Throughput,MB/s,True,8,14674008.0381,21676.0385,-99.85,2.0,0.0023,-0.9,**
+zgc_gen,g1gc,totalHeapUsedMax,Peak Heap Used,MB,False,8,2149.0392,588.75,-72.6,1.0,0.0021,-0.936,**
+zgc_gen,g1gc,totalHeapAllocMax,Heap Allocated,MB,False,8,2298.5415,965.5,-58.0,1.0,0.002,-0.878,**
+zgc_gen,g1gc,wallTimeSec,Wall-Clock Time,s,False,18,30.0149,28.1933,-6.07,64.0,0.3692,-0.012,ns
+zgc_gen,g1gc,freedMemoryByGC,Memory Freed by GC,MB,True,8,20581.96,18778.0,-8.76,12.0,0.0866,-0.324,ns
+zgc_gen,g1gc,footprint,Memory Footprint,MB,False,8,2298.5415,965.5,-58.0,1.0,0.0022,-0.88,**
+zgc_gen,shenandoah,throughput,Throughput,%,True,8,100.0125,99.9163,-0.1,15.0,0.4357,-0.043,ns
+zgc_gen,shenandoah,avgPause,Avg Pause Time,s,False,8,0.0001,0.0003,448.94,2.0,0.002,0.867,**
+zgc_gen,shenandoah,maxPause,Max Pause Time,s,False,8,0.0001,0.0029,1858.47,1.0,0.0022,0.919,**
+zgc_gen,shenandoah,pauseCount,GC Pause Count,,False,8,20.625,57.75,180.0,1.0,0.0019,0.904,**
+zgc_gen,shenandoah,gcPerformance,GC Throughput,MB/s,True,8,14674008.0381,574378.6376,-96.09,2.0,0.0016,-0.893,**
+zgc_gen,shenandoah,totalHeapUsedMax,Peak Heap Used,MB,False,8,2149.0392,1560.6068,-27.38,7.0,0.021,-0.623,*
+zgc_gen,shenandoah,totalHeapAllocMax,Heap Allocated,MB,False,8,2298.5415,2248.3889,-2.18,10.0,0.0927,-0.289,ns
+zgc_gen,shenandoah,wallTimeSec,Wall-Clock Time,s,False,18,30.0149,31.4802,4.88,31.0,0.0159,0.062,*
+zgc_gen,shenandoah,freedMemoryByGC,Memory Freed by GC,MB,True,8,20581.96,16654.8641,-19.08,7.0,0.0182,-0.63,*
+zgc_gen,shenandoah,footprint,Memory Footprint,MB,False,8,2298.5415,2248.3889,-2.18,13.0,0.1018,-0.293,ns
+zgc_nogen,g1gc,throughput,Throughput,%,True,18,99.9789,96.6728,-3.31,0.0,0.0002,-0.997,**
+zgc_nogen,g1gc,avgPause,Avg Pause Time,s,False,18,0.0001,0.012,20098.13,0.0,0.0,1.0,**
+zgc_nogen,g1gc,maxPause,Max Pause Time,s,False,18,0.0001,0.1031,91760.89,0.0,0.0,1.0,**
+zgc_nogen,g1gc,pauseCount,GC Pause Count,,False,18,11.9444,84.1667,604.65,0.0,0.0,0.793,**
+zgc_nogen,g1gc,gcPerformance,GC Throughput,MB/s,True,18,13343660.4516,24538.5634,-99.82,0.0,0.0,-1.0,**
+zgc_nogen,g1gc,totalHeapUsedMax,Peak Heap Used,MB,False,18,2076.2222,462.8889,-77.71,0.0,0.0,-0.728,**
+zgc_nogen,g1gc,totalHeapAllocMax,Heap Allocated,MB,False,18,2225.4444,719.7778,-67.66,3.0,0.0,-0.623,**
+zgc_nogen,g1gc,wallTimeSec,Wall-Clock Time,s,False,18,29.6927,28.1933,-5.05,60.0,0.2837,-0.025,ns
+zgc_nogen,g1gc,freedMemoryByGC,Memory Freed by GC,MB,True,18,12956.6667,13481.1667,4.05,82.0,0.8986,0.025,ns
+zgc_nogen,g1gc,footprint,Memory Footprint,MB,False,18,2225.4444,719.7778,-67.66,3.0,0.0,-0.623,**
+zgc_nogen,shenandoah,throughput,Throughput,%,True,18,99.9789,99.1383,-0.84,0.0,0.0002,-0.901,**
+zgc_nogen,shenandoah,avgPause,Avg Pause Time,s,False,18,0.0001,0.0004,511.21,0.0,0.0002,1.0,**
+zgc_nogen,shenandoah,maxPause,Max Pause Time,s,False,18,0.0001,0.0031,2624.75,0.0,0.0002,0.994,**
+zgc_nogen,shenandoah,pauseCount,GC Pause Count,,False,18,11.9444,40.3333,237.67,0.0,0.0,0.596,**
+zgc_nogen,shenandoah,gcPerformance,GC Throughput,MB/s,True,18,13343660.4516,0.0,-100.0,0.0,0.0,-1.0,**
+zgc_nogen,shenandoah,totalHeapUsedMax,Peak Heap Used,MB,False,9,1926.6667,1408.0894,-26.92,7.0,0.0206,-0.612,*
+zgc_nogen,shenandoah,totalHeapAllocMax,Heap Allocated,MB,False,9,2060.4444,2026.7751,-1.63,17.0,0.4158,-0.048,ns
+zgc_nogen,shenandoah,wallTimeSec,Wall-Clock Time,s,False,18,29.6927,31.4802,6.02,35.0,0.0268,0.043,*
+zgc_nogen,shenandoah,freedMemoryByGC,Memory Freed by GC,MB,True,18,12956.6667,0.0,-100.0,0.0,0.0,-1.0,**
+zgc_nogen,shenandoah,footprint,Memory Footprint,MB,False,9,2060.4444,2026.7751,-1.63,20.0,0.4508,-0.055,ns
+g1gc,shenandoah,throughput,Throughput,%,True,18,96.6728,99.1383,2.55,21.0,0.0034,0.796,**
+g1gc,shenandoah,avgPause,Avg Pause Time,s,False,18,0.012,0.0004,-96.97,0.0,0.0,-1.0,**
+g1gc,shenandoah,maxPause,Max Pause Time,s,False,18,0.1031,0.0031,-97.03,0.0,0.0,-0.932,**
+g1gc,shenandoah,pauseCount,GC Pause Count,,False,18,84.1667,40.3333,-52.08,14.5,0.002,-0.361,**
+g1gc,shenandoah,gcPerformance,GC Throughput,MB/s,True,18,24538.5634,0.0,-100.0,0.0,0.0,-1.0,**
+g1gc,shenandoah,totalHeapUsedMax,Peak Heap Used,MB,False,9,526.4444,1408.0894,167.47,1.0,0.0016,0.897,**
+g1gc,shenandoah,totalHeapAllocMax,Heap Allocated,MB,False,9,885.7778,2026.7751,128.81,3.0,0.0021,0.857,**
+g1gc,shenandoah,wallTimeSec,Wall-Clock Time,s,False,18,28.1933,31.4802,11.66,21.0,0.0034,0.117,**
+g1gc,shenandoah,freedMemoryByGC,Memory Freed by GC,MB,True,18,13481.1667,0.0,-100.0,0.0,0.0,-1.0,**
+g1gc,shenandoah,footprint,Memory Footprint,MB,False,9,885.7778,2026.7751,128.81,3.0,0.0021,0.857,**

@@ -1,0 +1,41 @@
+Using scaled threading model. 12 processors detected, 12 threads used to drive the workload, in a possible range of [1,1024]
+Version: h2 2.2.220 derby 10.15.2.0 (use -p to print nominal benchmark stats)
+Preparing the H2 database...
+TPCC configuration: scale: 16, terminals: 12, transactions: 100000
+java.lang.reflect.InvocationTargetException
+java.lang.reflect.InvocationTargetException
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:118)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.dacapo.harness.H2.preIteration(H2.java:95)
+	at org.dacapo.harness.Benchmark.run(Benchmark.java:243)
+	at org.dacapo.harness.TestHarness.runBenchmark(TestHarness.java:225)
+	at org.dacapo.harness.TestHarness.main(TestHarness.java:170)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at Harness.main(Harness.java:39)
+Caused by: org.h2.jdbc.JdbcSQLTimeoutException: Statement was canceled or the session timed out; SQL statement:
+INSERT INTO ORDERLINE (OL_O_ID, OL_D_ID, OL_W_ID, OL_NUMBER, OL_I_ID, OL_SUPPLY_W_ID, OL_DELIVERY_D, OL_QUANTITY, OL_AMOUNT, OL_DIST_INFO, OL_DELIVERY_D_INITIAL, OL_INITIAL)  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, TRUE) [57014-220]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:572)
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:489)
+	at org.h2.message.DbException.get(DbException.java:223)
+	at org.h2.message.DbException.get(DbException.java:199)
+	at org.h2.message.DbException.get(DbException.java:188)
+	at org.h2.engine.SessionLocal.checkCanceled(SessionLocal.java:1269)
+	at org.h2.command.Prepared.checkCanceled(Prepared.java:334)
+	at org.h2.command.Prepared.setCurrentRowNumber(Prepared.java:398)
+	at org.h2.command.dml.Insert.insertRows(Insert.java:153)
+	at org.h2.command.dml.Insert.update(Insert.java:135)
+	at org.h2.command.dml.DataChangeStatement.update(DataChangeStatement.java:74)
+	at org.h2.command.CommandContainer.update(CommandContainer.java:169)
+	at org.h2.command.Command.executeUpdate(Command.java:252)
+	at org.h2.jdbc.JdbcPreparedStatement.executeUpdateInternal(JdbcPreparedStatement.java:209)
+	at org.h2.jdbc.JdbcPreparedStatement.executeUpdate(JdbcPreparedStatement.java:169)
+	at org.apache.derbyTesting.system.oe.load.SimpleInsert.orderTable(SimpleInsert.java:437)
+	at org.apache.derbyTesting.system.oe.load.SimpleInsert.populateForOneWarehouse(SimpleInsert.java:149)
+	at org.apache.derbyTesting.system.oe.load.SimpleInsert.populateAllTables(SimpleInsert.java:127)
+	at org.apache.derbyTesting.system.oe.load.ThreadInsert.populateAllTables(ThreadInsert.java:127)
+	at org.dacapo.h2.TPCC.loadData(Unknown Source)
+	at org.dacapo.h2.TPCC.preIterationMemoryDB(Unknown Source)
+	at org.dacapo.h2.TPCC.preIteration(Unknown Source)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	... 8 more
