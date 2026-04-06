@@ -9,11 +9,9 @@ statistical analysis, and a workload-aware GC recommendation framework.
 ---
 
 ## Table of Contents
-
-1. [Background and Motivation](#background-and-motivation)
-2. [GC Configurations Tested](#gc-configurations-tested)
-3. [Benchmark Suites](#benchmark-suites)
-4. [Experiments](#experiments)
+1. [GC Configurations Tested](#gc-configurations-tested)
+2. [Benchmark Suites](#benchmark-suites)
+3. [Experiments](#experiments)
    - [Experiment 1 — DaCapo Performance Comparison](#experiment-1--dacapo-performance-comparison)
    - [Experiment 2 — Renaissance Performance Comparison](#experiment-2--renaissance-performance-comparison)
    - [Experiment 3 — Heap Size Sensitivity](#experiment-3--heap-size-sensitivity)
@@ -22,38 +20,15 @@ statistical analysis, and a workload-aware GC recommendation framework.
    - [Experiment 6 — Tail Latency Analysis](#experiment-6--tail-latency-analysis)
    - [Experiment 7 — Generational ZGC Statistical Analysis](#experiment-7--generational-zgc-statistical-analysis)
    - [Experiment 8 — GC Recommendation Framework](#experiment-8--gc-recommendation-framework)
-5. [Analysis Pipeline](#analysis-pipeline)
-6. [Environment Requirements](#environment-requirements)
-7. [Directory Structure](#directory-structure)
-8. [Step-by-Step Execution Guide](#step-by-step-execution-guide)
-9. [Output Reference](#output-reference)
-10. [Troubleshooting](#troubleshooting)
+4. [Analysis Pipeline](#analysis-pipeline)
+5. [Environment Requirements](#environment-requirements)
+6. [Directory Structure](#directory-structure)
+7. [Step-by-Step Execution Guide](#step-by-step-execution-guide)
+8. [Output Reference](#output-reference)
+9. [Troubleshooting](#troubleshooting)
 
 ---
 
-## Background and Motivation
-
-The original CSE6305 study benchmarked three garbage collectors (G1GC,
-Shenandoah, ZGC) on OpenJDK 11.0.15 using DaCapo 9.12-MR1 and Renaissance.
-GC logs were analyzed with GCEasy, a web-based tool.
-
-This study identifies and addresses five gaps:
-
-1. **Java 21 + Generational ZGC.** Java 21 introduced `-XX:+ZGenerational`,
-   splitting the ZGC heap into young and old generations. This was unavailable
-   on Java 11 and was not studied.
-2. **GC tuning parameters.** The original study varied only `-Xmx`. Two
-   additional G1GC tuning dimensions are tested: a tighter pause-time target
-   (`-XX:MaxGCPauseMillis=50`) and reduced concurrency (`-XX:ConcGCThreads=2`).
-3. **No-op GC ceiling.** Epsilon GC never reclaims memory, establishing a
-   theoretical performance ceiling with zero GC overhead.
-4. **Energy consumption.** Every benchmark/GC combination is measured for CPU
-   package energy (Joules) using Intel RAPL, enabling an energy–performance
-   Pareto analysis.
-5. **Offline reproducible tooling.** GCEasy is replaced with GCViewer 1.36, a
-   local CLI tool that produces ~60 structured metrics per log, fully offline.
-
----
 
 ## GC Configurations Tested
 
