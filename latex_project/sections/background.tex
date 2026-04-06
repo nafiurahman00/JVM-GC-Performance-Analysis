@@ -1,0 +1,39 @@
+The garbage collectors examined in this study are all based on reference tracing techniques. This design choice stems from the limitations associated with reference counting approaches. Reference counting alone is not sufficient to form a complete garbage collection strategy, as it cannot naturally handle cyclic references without additional mechanisms, which introduce computational overhead. Moreover, it requires the use of write barriers for every reference update, adding further runtime cost. Due to these drawbacks, reference counting is generally avoided in modern production JVM implementations, where tracing-based collectors are preferred for their robustness and efficiency.
+
+\subsection{Garbage First (G1)}
+
+Garbage First (G1)~\cite{detlefs2004g1} is the default garbage collector in the OpenJDK HotSpot JVM and is widely adopted in practice. It is a generational, region-based collector that divides the heap into a large number of equal-sized regions. Unlike traditional collectors where the young and old generations are contiguous memory areas, G1 organizes both generations as sets of independent regions, which do not need to be physically adjacent in memory.
+
+For the young generation, G1 performs collection using a parallel Stop The World copying approach, processing all young regions together. In contrast, the old generation is handled incrementally. Instead of collecting the entire old generation at once, G1 selects a subset of regions for collection during what is known as a mixed collection cycle. These cycles combine young generation collection with partial old generation cleanup, using a largely concurrent marking and evacuation process.
+
+A key strength of G1 is its ability to prioritize regions with the highest amount of reclaimable memory. By performing a global marking phase, it estimates the amount of garbage in each region and targets those that yield the most benefit. G1 also employs incremental compaction, where objects in selected regions are relocated to free regions during collection. Once all live objects are evacuated, the original regions become available for reuse. This approach helps reduce fragmentation and avoids the need for full heap compaction in most cases. However, if memory pressure becomes too high and objects cannot be promoted, G1 may fall back to a full Stop The World compaction. Proper tuning and profiling are often required to minimize such events.
+
+To support its operation, G1 uses remembered sets to track inter-region references, along with a Snapshot At The Beginning (SATB) marking algorithm. The SATB mechanism ensures correctness during concurrent marking by accounting for objects that may become reachable after the marking phase begins. This is achieved through write barriers that record reference updates, allowing the collector to maintain an accurate view of live objects.
+
+\subsection{Shenandoah}
+
+Shenandoah is a low-pause-time garbage collector designed to minimize application interruption, particularly for large heaps. Similar to ZGC, it is region-based but, unlike G1, it is non-generational. Its primary goal is to perform most garbage collection work concurrently with application execution, including compaction.
+
+Instead of using pointer metadata like ZGC, Shenandoah relies on Brooks pointers to enable concurrent object relocation. In this approach, each object contains an additional forwarding pointer that always refers to its current location. Initially, this pointer references the object itself. When the object is moved during compaction, the pointer is updated to the new location.
+
+During relocation, objects are copied from their original location, referred to as from-space, to a new location, known as to-space. Traditional collectors would pause application threads to update all references to the relocated object. Shenandoah avoids this by redirecting access through the forwarding pointer. Read and write operations are intercepted by barriers that ensure all accesses are directed to the correct, up-to-date location.
+
+If a write occurs on an object that has not yet been relocated but is scheduled for movement, the system may trigger the relocation process on demand. This involves creating a copy in to-space, updating the forwarding pointer, applying the write to the new copy, and adjusting the reference that triggered the operation. Over time, references to old locations are updated concurrently, and once all references are corrected, the old copies can be safely reclaimed.
+
+While this approach significantly reduces pause times, it introduces certain overheads. These include additional memory usage for forwarding pointers, extra instructions for maintaining correct access semantics, and potential cache inefficiencies due to pointer indirection. Despite these costs, Shenandoah is designed to perform well even in smaller heap configurations, which distinguishes it from some other low-latency collectors.
+
+\subsection{Z Garbage Collector (ZGC)}
+
+The Z Garbage Collector (ZGC) is a scalable, low-latency collector designed to handle heap sizes ranging from relatively small to multiple terabytes. Its primary objective is to keep pause times consistently low, typically below 10 milliseconds, regardless of heap size or live data volume.
+
+Like G1 and Shenandoah, ZGC is region-based. However, in its original design, it is non-generational, meaning it does not separate objects into young and old generations. Instead, it treats the heap as a uniform space and relies on concurrent marking and relocation to manage memory efficiently. More recently, a generational version of ZGC has been introduced, which extends the original design by incorporating generational concepts. Generational ZGC separates objects based on age, allowing it to optimize for the common case where most objects are short-lived, thereby improving throughput while maintaining low latency.
+
+ZGC achieves concurrent compaction through two key mechanisms: coloured pointers and load barriers. Coloured pointers embed metadata directly within object references by utilizing unused bits in 64-bit addresses. Specifically, a portion of the reference is used for the actual memory address, while a few bits are reserved as flags to store state information about the object. These flags include indicators such as whether the object has been marked, relocated, or is eligible for finalization.
+
+When an application accesses an object reference, a load barrier is triggered. This barrier checks the metadata encoded in the pointer to determine whether the reference points to the correct location. If the object has been relocated, the barrier updates the reference to the new address transparently. In some cases, application threads may even assist in relocating objects, further distributing the workload.
+
+To avoid performance penalties associated with decoding coloured pointers, ZGC employs a clever memory mapping technique. It maps the same physical memory region to multiple virtual addresses, each corresponding to a different metadata state. This allows the system to interpret references efficiently without excessive bit manipulation.
+
+The introduction of generational ZGC builds upon these mechanisms by dividing the heap into young and old regions, enabling more efficient handling of short-lived objects while preserving the low-latency characteristics of the original design. This hybrid approach combines the advantages of generational garbage collection with the advanced concurrency techniques of ZGC, making it suitable for a wide range of modern workloads.
+
+Overall, ZGC represents a significant advancement in garbage collection technology, offering both scalability and predictably low pause times, while its generational extension further enhances its adaptability and performance.

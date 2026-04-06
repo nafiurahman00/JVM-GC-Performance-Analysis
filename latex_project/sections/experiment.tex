@@ -1,0 +1,273 @@
+
+
+This section describes the experimental methodology used to evaluate the performance, energy consumption, tail latency, and workload-adaptive behavior of six garbage collector (GC) configurations on OpenJDK~21. The study spans eight distinct experiments, each targeting a different dimension of GC behavior.
+
+\subsection{Chosen Benchmarks}
+
+We selected 18 benchmarks from two established Java benchmark suites: the DaCapo Benchmark Suite~\cite{blackburn2006dacapo,blackburn2006dacapo_tr} (Chopin 23.11-MR2 release) and the Renaissance Benchmark Suite~\cite{prokopec2019renaissance} (version 0.16.1). Together, these benchmarks cover a broad spectrum of allocation rates, live-data densities, concurrency patterns, and execution durations.
+
+\subsubsection{DaCapo Chopin (10 benchmarks)}
+
+The DaCapo Chopin release (December 2023) is the latest version with full Java~21 compatibility. We selected the following ten benchmarks:
+
+\begin{itemize}
+\item \textbf{avrora}: Simulates AVR microcontroller programs---a low-allocation, compute-bound workload.
+\item \textbf{batik}: Renders and rasterizes SVG images using Apache Batik.
+\item \textbf{fop}: Converts XSL-FO documents to PDF using Apache FOP.
+\item \textbf{h2}: Executes an in-memory OLTP workload against an H2 SQL database---one of the most allocation-intensive DaCapo benchmarks.
+\item \textbf{luindex}: Constructs a full-text index over a document corpus using Apache Lucene.
+\item \textbf{lusearch}: Performs full-text search queries over the indexed corpus using Apache Lucene.
+\item \textbf{pmd}: Runs static analysis rules over a body of Java source code.
+\item \textbf{sunflow}: Renders a scene using ray tracing---a CPU-intensive parallel workload.
+\item \textbf{tomcat}: Handles HTTP requests using an embedded Apache Tomcat server.
+\item \textbf{xalan}: Applies XSLT transformations to XML documents using Apache Xalan.
+\end{itemize}
+
+\subsubsection{Renaissance (8 benchmarks)}
+
+Renaissance focuses on modern JVM workloads involving concurrency, functional programming, and distributed data processing. Each Renaissance benchmark was run with 3 repetitions (\texttt{-r~3}) for statistical robustness. We selected the following eight benchmarks:
+
+\begin{itemize}
+\item \textbf{chi-square}: Runs the chi-squared statistical test using the Apache Spark ML library~\cite{zaharia2016spark}.
+\item \textbf{dec-tree}: Trains a decision tree classifier using Spark ML's Random Forest implementation~\cite{zaharia2016spark}.
+\item \textbf{dotty}: Compiles Scala source files using the Dotty (Scala~3) compiler.
+\item \textbf{finagle-http}: Sends many small HTTP requests to a Finagle HTTP server and awaits responses---a latency-sensitive server workload.
+\item \textbf{movie-lens}: Performs collaborative filtering movie recommendations using Spark's ALS algorithm~\cite{zaharia2016spark}.
+\item \textbf{page-rank}: Computes PageRank iterations over a graph using Spark RDDs~\cite{zaharia2016spark}.
+\item \textbf{philosophers}: Solves a variant of the dining philosophers problem using ScalaSTM---a fine-grained concurrency stress test.
+\item \textbf{scala-kmeans}: Runs K-Means clustering using Scala collections.
+\end{itemize}
+
+\subsection{GC Configurations Under Test}
+
+We tested seven GC configurations spanning three collector families. Six configurations were used across all performance, energy, and latency experiments; the seventh (Epsilon) was used exclusively as a no-op baseline:
+
+\begin{table}[h]
+\footnotesize
+\centering
+\caption{GC configurations and their JVM flags.}
+\label{tab:gc-configs}
+\begin{tabular}{lll}
+\hline
+\textbf{Config Name} & \textbf{JVM Flags} & \textbf{Purpose} \\
+\hline
+\texttt{g1gc}          & \texttt{-XX:+UseG1GC}                                    & G1GC with default settings \\
+\texttt{shenandoah}    & \texttt{-XX:+UseShenandoahGC}                            & Shenandoah with defaults \\
+\texttt{zgc\_nogen}    & \texttt{-XX:+UseZGC -XX:-ZGenerational}                  & Non-Generational ZGC \\
+\texttt{zgc\_gen}      & \texttt{-XX:+UseZGC -XX:+ZGenerational}                  & Generational ZGC (Java 21) \\
+\texttt{g1gc\_pause50} & \texttt{-XX:+UseG1GC -XX:MaxGCPauseMillis=50}            & G1GC with 50\,ms pause target \\
+\texttt{g1gc\_threads2}& \texttt{-XX:+UseG1GC -XX:ConcGCThreads=2}               & G1GC with 2 concurrent threads \\
+\texttt{epsilon}       & \texttt{-XX:+UnlockExperimentalVMOptions -XX:+UseEpsilonGC} & No-op GC baseline \\
+\hline
+\end{tabular}
+\end{table}
+
+The Generational ZGC configuration (\texttt{-XX:+ZGenerational}) was introduced in Java~21 and splits the ZGC heap into young and old generations to reduce scanning overhead. The two G1GC tuning variants test sensitivity to (a)~a tighter pause-time goal than the default 200\,ms and (b)~reduced concurrent GC thread count, simulating a resource-constrained deployment.
+
+All configurations include \texttt{-XX:+UnlockExperimentalVMOptions} globally, and detailed unified GC logging is enabled with:
+
+\begin{verbatim}
+-Xlog:gc*:file=<output.log>:time,uptime,level,tags
+\end{verbatim}
+
+This produces Java~9+ unified log format output compatible with GCViewer analysis.
+
+\subsection{Experimental Environment}
+
+All experiments were executed on the same physical machine running Linux with OpenJDK~21 and at least 16\,GB of RAM. A fixed 2\,GB heap (\texttt{-Xmx2g}) was used for all standard experiments unless otherwise noted (the heap-varying experiment uses 500--2000\,MB, and the Epsilon experiment uses 4\,GB).
+
+Unlike the original study, which used GCEasy (a web-based log analyzer), we replaced it with GCViewer~1.36---a local, open-source CLI tool---for fully offline and reproducible analysis. GCViewer extracts approximately 60 structured metrics from each GC log file in CSV format.
+
+\subsection{Experiment 1: DaCapo Performance Comparison}
+We compare all six production GC configurations across the 10 DaCapo benchmarks with a fixed 2\,GB heap.
+
+\textbf{Script:} \texttt{scripts/run\_dacapo.sh}
+
+Each benchmark was executed once per GC configuration, yielding $10 \times 6 = 60$ runs. The commands follow this pattern:
+
+\begin{verbatim}
+java -XX:+UnlockExperimentalVMOptions \
+     <gc_flags> \
+     '-Xlog:gc*:file=results/dacapo/<benchmark>/<gc>.log
+         :time,uptime,level,tags' \
+     -jar benchmarks/dacapo_chopin/dacapo-23.11-MR2-chopin.jar \
+     <benchmark>
+\end{verbatim}
+
+\subsection{Experiment 2: Renaissance Performance Comparison}
+
+We compare all six production GC configurations across the 8 Renaissance benchmarks with 3 repetitions each.
+
+\textbf{Script:} \texttt{scripts/run\_renaissance.sh}
+
+This yields $8 \times 6 = 48$ runs (each with 3 internal repetitions). The commands follow this pattern:
+
+\begin{verbatim}
+java -XX:+UnlockExperimentalVMOptions \
+     <gc_flags> \
+     '-Xlog:gc*:file=results/renaissance/<benchmark>/<gc>.log
+         :time,uptime,level,tags' \
+     -jar benchmarks/renaissance-gpl-0.16.1.jar \
+     <benchmark> -r 3 --csv <results_csv>
+\end{verbatim}
+
+\subsection{Experiment 3: Heap Size Sensitivity}
+
+We determine how each GC responds to varying memory pressure by testing three memory-intensive Renaissance benchmarks across seven heap sizes.
+
+\textbf{Script:} \texttt{scripts/run\_renaissance\_heap\_vary.sh}
+
+\begin{itemize}
+\item \textbf{Benchmarks:} chi-square, movie-lens, page-rank
+\item \textbf{Heap sizes:} 500, 750, 1000, 1250, 1500, 1750, 2000\,MB
+\item \textbf{GC configs:} g1gc, shenandoah, zgc\_nogen, zgc\_gen
+\item \textbf{Repetitions:} 3 per run
+\end{itemize}
+
+This yields $3 \times 7 \times 4 = 84$ runs. The heap size is set via \texttt{-Xmx\$\{size\}M}:
+
+\begin{verbatim}
+java -XX:+UnlockExperimentalVMOptions \
+     <gc_flags> -Xmx${size}M \
+     '-Xlog:gc*:file=results/heap_vary/<benchmark>/
+         <gc>_${size}M.log:time,uptime,level,tags' \
+     -jar benchmarks/renaissance-gpl-0.16.1.jar \
+     <benchmark> -r 3
+\end{verbatim}
+
+
+\subsection{Experiment 4: Energy Consumption Measurement}
+
+We quantify the CPU energy consumed (in Joules) by each benchmark/GC combination using Intel RAPL.
+
+\textbf{Script:} \texttt{scripts/run\_energy\_benchmarks.sh}
+
+Intel RAPL (Running Average Power Limit) provides hardware-level energy counters accessible via the Linux sysfs interface at \texttt{/sys/class/powercap/intel-rapl}. Three energy domains are measured:
+\begin{itemize}
+\item \textbf{Package (pkg):} Total CPU socket energy including all cores, caches, and memory controller.
+\item \textbf{Core:} Energy consumed by CPU compute cores alone.
+\item \textbf{Uncore:} Energy consumed by non-core components (integrated GPU, memory controller, last-level cache controller).
+\end{itemize}
+
+For each run, the RAPL energy counter (\texttt{energy\_uj}, in microjoules) is read immediately before starting the JVM and again after the process exits. The difference is converted to Joules. If the sysfs interface is not readable, the script falls back to \texttt{perf stat -e power/energy-pkg/}.
+
+Both DaCapo (10 benchmarks) and Renaissance (8 benchmarks) are run with all six production GC configurations, yielding $18 \times 6 = 108$ energy measurements.
+
+\subsection{Experiment 5: Tail Latency Analysis}
+
+We characterize the full distribution of GC pause durations, with emphasis on worst-case tail percentiles (P99, P99.9).
+
+This experiment does not require additional benchmark runs---it parses the raw GC logs already collected in Experiments~1 and~2. Every individual stop-the-world (STW) pause is extracted from each log file using regex matching on the Java~21 unified log format. For each benchmark $\times$ GC combination, the following percentile statistics are computed:
+
+\begin{itemize}
+\item \textbf{P50 (median):} The typical pause duration.
+\item \textbf{P95:} Only 5\% of pauses exceed this threshold.
+\item \textbf{P99:} Only 1\% of pauses exceed this---the standard tail latency metric.
+\item \textbf{P99.9:} One-in-a-thousand worst case.
+\item \textbf{Min, max, mean, standard deviation:} Full distribution characterization.
+\end{itemize}
+
+\subsection{Experiment 6: Generational ZGC Statistical Analysis}
+
+We rigorously test whether Generational ZGC (\texttt{zgc\_gen}) provides statistically significant improvements over Non-Generational ZGC (\texttt{zgc\_nogen}) and other collectors.
+
+This experiment applies the Wilcoxon signed-rank test (a non-parametric, paired statistical test) to compare the two ZGC variants and all other GC configurations across multiple metrics:
+
+\begin{itemize}
+\item Throughput (\%)
+\item Average pause time (s)
+\item Maximum pause time (s)
+\item GC pause count
+\item GC performance (MB/s)
+\item Peak heap used (MB)
+\item Heap allocated (MB)
+\item Wall-clock time (s)
+\end{itemize}
+
+For each metric, the test computes:
+\begin{itemize}
+\item \textbf{Wilcoxon statistic and $p$-value:} Whether the difference is statistically significant ($p < 0.05$).
+\item \textbf{Effect size (rank-biserial $r$):} The magnitude of the difference.
+\item \textbf{Percentage change:} Relative improvement or regression.
+\end{itemize}
+
+\subsection{Experiment 7: GC Recommendation Framework}
+
+We build a workload-characterization-driven recommendation system that, given a workload profile and user priorities, recommends the most suitable GC.
+
+\subsubsection{Workload Feature Extraction}
+
+Five features are derived for each benchmark, averaged across all GC configurations to characterize the workload independently of collector choice:
+
+\begin{table}[h]
+\centering
+\caption{Workload features derived from GCViewer and tail-latency data.}
+\label{tab:workload-features}
+\begin{tabular}{lll}
+\hline
+\textbf{Feature} & \textbf{Formula} & \textbf{Interpretation} \\
+\hline
+\texttt{gc\_frequency}    & pauseCount / wallTimeSec    & GC events per second \\
+\texttt{alloc\_rate}      & freedMemory / wallTimeSec   & Allocation pressure (MB/s) \\
+\texttt{heap\_pressure}   & heapUsedMax / heapAllocMax  & Live-data density (0--1) \\
+\texttt{tail\_ratio}      & P99 / P50 pause             & Pause distribution shape \\
+\texttt{pause\_overhead}  & accumPause / wallTimeSec    & Fraction of time in GC \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsubsection{User Personas and Composite Scoring}
+
+Four user personas are defined, each with a different weighting of metrics. For each persona, a composite score is computed for every benchmark $\times$ GC pair by normalizing all relevant metrics to $[0, 1]$ within each benchmark:
+
+\begin{itemize}
+\item \textbf{Latency-Critical:} Prioritizes P99 pause time, max pause, and average pause. Suitable for real-time systems, trading platforms, and interactive applications.
+\item \textbf{Throughput-First:} Prioritizes throughput percentage and wall-clock time. Suitable for batch processing and data pipelines.
+\item \textbf{Memory-Constrained:} Prioritizes peak heap usage and heap footprint. Suitable for containerized environments, edge devices, and small VMs.
+\item \textbf{Balanced:} Assigns equal weight to all metrics. Suitable for general-purpose applications.
+\end{itemize}
+
+For each benchmark $\times$ persona, the GC with the highest composite score is elected as the recommended choice.
+
+\subsubsection{Decision Tree Classification}
+
+A Decision Tree classifier (from scikit-learn) is trained per persona to make the framework predictive for new workloads. The five workload features serve as input, and the recommended GC is the target label. Feature importance is extracted to identify which workload characteristics most influence the recommendation.
+
+A PCA (Principal Component Analysis) projection of the 18 benchmarks into 2-D space based on the five workload features is also generated to reveal natural clustering of workloads.
+
+\subsection{Log Analysis with GCViewer}
+
+
+After all benchmark runs are complete, GCViewer~1.36 is run in batch mode on every \texttt{.log} file across all experiment directories. For each log, GCViewer generates a SUMMARY CSV containing approximately 60 metrics in semicolon-separated format (\texttt{metricName; value; unit}).
+
+The key metrics extracted and used across the study are:
+
+\begin{table}[h]
+\centering
+\caption{Key GC metrics extracted by GCViewer.}
+\label{tab:gc-metrics}
+\begin{tabular}{llp{7cm}}
+\hline
+\textbf{Metric} & \textbf{Unit} & \textbf{Description} \\
+\hline
+\texttt{throughput}        & \%     & Percentage of total time not spent in GC (higher is better) \\
+\texttt{avgPause}          & s      & Mean stop-the-world GC pause duration \\
+\texttt{maxPause}          & s      & Single longest GC pause \\
+\texttt{accumPause}        & s      & Total time in all GC pauses \\
+\texttt{pauseCount}        & count  & Total number of GC pause events \\
+\texttt{totalHeapUsedMax}  & MB     & Peak live heap usage \\
+\texttt{totalHeapAllocMax} & MB     & Maximum heap capacity allocated \\
+\texttt{freedMemory}       & MB     & Total memory reclaimed during the run \\
+\texttt{gcPerformance}     & MB/s   & Memory reclamation rate \\
+\texttt{footprint}         & MB     & Heap footprint after GC \\
+\texttt{freedMemoryPerMin} & MB/min & Allocation rate proxy \\
+\hline
+\end{tabular}
+\end{table}
+
+GCViewer is invoked as:
+
+\begin{verbatim}
+java -jar tools/gcviewer-1.36.jar <input.log> <output.csv> -t SUMMARY
+\end{verbatim}
+

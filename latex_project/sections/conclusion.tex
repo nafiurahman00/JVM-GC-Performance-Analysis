@@ -1,0 +1,8 @@
+This study presented a comprehensive evaluation of modern JVM Garbage Collectors on OpenJDK 21, comparing the newly introduced Generational ZGC against established collectors like G1GC and Shenandoah. Through extensive profiling across the DaCapo and Renaissance benchmark suites, we analyzed performance trade-offs in terms of throughput, tail latency, memory footprint, and energy consumption.
+
+Our findings demonstrate that GC selection is highly workload-dependent. While G1GC remains a robust default for general-purpose throughput, Generational ZGC excels in latency-critical scenarios by consistently maintaining sub-millisecond pause times. Furthermore, our workload characterization and recommendation framework highlights the necessity of aligning GC choices with specific application profiles and operational constraints.
+
+\subsection*{Data Availability and Reproducibility}
+
+To support reproducibility and facilitate further research, all experimental scripts, benchmark configurations, raw logs, and parsing tools used in this study are open-source and publicly available. The complete repository containing all experiments can be found on GitHub at: \\
+\url{https://github.com/nafiurahman00/CSE6305-JVM-GC-Performance-Analysis}
