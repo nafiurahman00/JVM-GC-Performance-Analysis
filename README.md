@@ -656,9 +656,6 @@ Ensure at least 2 GB of free space in the `experiment/` directory.
 
 ## License
 
-This project is part of the CSE6305 Performance Study of Modern JVM Garbage
-Collectors research.
-
 Benchmark suites are distributed under their respective licenses:
 - DaCapo Chopin: Apache License 2.0
 - Renaissance (GPL edition): GNU General Public License
